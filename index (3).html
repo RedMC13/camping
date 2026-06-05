@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Camping">
+<title>Camping Municipal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#fff;--bg2:#f5f5f4;--bg3:#f0efeb;--txt:#1c1c1a;--txt2:#6b6b68;--txt3:#a8a8a5;--brd:rgba(0,0,0,0.12);--brd2:rgba(0,0,0,0.22);--green:#1D9E75;--gbg:#E1F5EE;--gtxt:#0F6E56;--atxt:#854F0B;--rbg:#FAECE7;--rtxt:#993C1D;--btxt:#185FA5;--rm:8px;--rl:12px}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1e1c;--bg2:#2a2a28;--bg3:#232321;--txt:#f0ede8;--txt2:#a8a5a0;--txt3:#6b6866;--brd:rgba(255,255,255,0.12);--brd2:rgba(255,255,255,0.22);--gbg:#0a3326;--gtxt:#5DCAA5;--rbg:#3a1508;--rtxt:#F0997B}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--txt);min-height:100vh}
+.wrap{max-width:600px;margin:0 auto;padding:1rem 1rem 4rem}
+#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1rem}
+.spin{width:40px;height:40px;border:3px solid var(--brd2);border-top-color:var(--green);border-radius:50%;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.hdr{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:.5px solid var(--brd)}
+.logo{width:40px;height:40px;background:var(--green);border-radius:var(--rm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0}
+.hdr h1{font-size:18px;font-weight:700;color:var(--txt)}
+.hdr p{font-size:12px;color:var(--txt2);margin-top:2px}
+.sbar{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--bg2);border-radius:var(--rm);margin-bottom:1.1rem;font-size:12px;color:var(--txt2)}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:background .3s}
+.sdot.ok{background:var(--green)}.sdot.err{background:#D85A30}.sdot.go{background:var(--btxt);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.sbar button{background:none;border:none;cursor:pointer;color:var(--txt2);font-size:12px;display:flex;align-items:center;gap:3px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.1rem}
+.stat{background:var(--bg2);border-radius:var(--rm);padding:10px 6px;text-align:center}
+.snum{font-size:22px;font-weight:700;color:var(--txt)}
+.snum.g{color:var(--gtxt)}.snum.a{color:var(--atxt)}
+.slbl{font-size:11px;color:var(--txt2);margin-top:2px;line-height:1.3}
+.tabs{display:flex;gap:4px;margin-bottom:1.1rem;background:var(--bg2);border-radius:var(--rm);padding:4px}
+.tab{flex:1;padding:7px 4px;border:none;background:transparent;border-radius:6px;font-size:13px;cursor:pointer;color:var(--txt2);display:flex;align-items:center;justify-content:center;gap:5px}
+.tab.on{background:var(--bg);color:var(--txt);font-weight:600;border:.5px solid var(--brd)}
+.tab i{font-size:15px}
+.srow{display:flex;gap:8px;margin-bottom:.9rem}
+.srow input{flex:1;padding:9px 11px;border:.5px solid var(--brd2);border-radius:var(--rm);background:var(--bg);color:var(--txt);font-size:14px;font-family:inherit}
+.srow input:focus{outline:none;border-color:var(--green)}
+.fbtn{padding:8px 11px;border:.5px solid var(--brd2);border-radius:var(--rm);background:var(--bg);color:var(--txt2);cursor:pointer;font-size:13px;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.fbtn.on{border-color:var(--green);color:var(--gtxt);background:var(--gbg)}
+.card{background:var(--bg);border:.5px solid var(--brd);border-radius:var(--rl);padding:.9rem;margin-bottom:.75rem;cursor:pointer}
+.card:active{opacity:.75}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.cname{font-size:15px;font-weight:600;color:var(--txt)}
+.cspot{font-size:12px;color:var(--txt2);margin-top:2px}
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:100px;font-size:12px;font-weight:500}
+.bp{background:var(--gbg);color:var(--gtxt)}.bu{background:var(--rbg);color:var(--rtxt)}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.meta span{font-size:12px;color:var(--txt2);display:flex;align-items:center;gap:3px}
+.meta i{font-size:14px}
+.empty{text-align:center;padding:2.5rem;color:var(--txt2);font-size:14px}
+.empty i{font-size:38px;display:block;margin-bottom:8px;color:var(--txt3)}
+.fcard{background:var(--bg);border:.5px solid var(--brd);border-radius:var(--rl);padding:1.2rem;margin-bottom:.75rem}
+.ftitle{font-size:15px;font-weight:600;margin-bottom:1rem;color:var(--txt);display:flex;align-items:center;gap:8px}
+.ftitle i{font-size:18px;color:var(--green)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ff{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:var(--txt2);font-weight:500}
+.field input{width:100%;padding:9px 11px;border:.5px solid var(--brd2);border-radius:var(--rm);background:var(--bg);color:var(--txt);font-size:14px;font-family:inherit}
+.field input:focus{outline:none;border-color:var(--green)}
+.ptog{display:flex;align-items:center;gap:12px;padding:9px 12px;border:.5px solid var(--brd2);border-radius:var(--rm);background:var(--bg);cursor:pointer;user-select:none}
+.psw{width:40px;height:22px;background:var(--brd2);border-radius:11px;position:relative;transition:background .2s;flex-shrink:0}
+.psw.on{background:var(--green)}
+.psw::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.psw.on::after{left:20px}
+.plbl{font-size:14px;color:var(--txt)}
+.btnp{width:100%;padding:11px;background:var(--green);color:#fff;border:none;border-radius:var(--rm);font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btnp:active{opacity:.85}
+.btns{width:100%;padding:11px;background:transparent;color:var(--txt2);border:.5px solid var(--brd2);border-radius:var(--rm);font-size:14px;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+.calcard{background:var(--bg);border:.5px solid var(--brd);border-radius:var(--rl);padding:1.2rem}
+.calnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calnav button{background:none;border:.5px solid var(--brd2);border-radius:var(--rm);padding:6px 11px;cursor:pointer;color:var(--txt2);display:flex;align-items:center}
+.caltit{font-size:15px;font-weight:600;color:var(--txt)}
+.cdows{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cdow{text-align:center;font-size:11px;color:var(--txt3);padding:4px 0;font-weight:500}
+.cdays{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:4px}
+.cday{padding:4px 2px;border-radius:var(--rm);cursor:pointer;font-size:13px;color:var(--txt);min-height:38px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px}
+.cday:active{background:var(--bg2)}
+.cday.om{color:var(--txt3)}
+.cday.tod .dn{background:var(--green);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.cday.sel{background:var(--gbg)}
+.dn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.cdot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.cdot.u{background:#D85A30}
+.calinfo{margin-top:1rem;padding-top:1rem;border-top:.5px solid var(--brd)}
+.calinfotit{font-size:14px;font-weight:600;color:var(--txt);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mcard{background:var(--bg2);border-radius:var(--rm);padding:.75rem;margin-bottom:6px;cursor:pointer}
+.mcard:active{opacity:.75}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
+.ov.open{display:flex}
+.sheet{background:var(--bg);border-radius:var(--rl) var(--rl) 0 0;padding:1.5rem;width:100%;max-width:600px;max-height:85vh;overflow-y:auto}
+.shandle{width:36px;height:4px;background:var(--brd2);border-radius:2px;margin:0 auto 1.2rem}
+.stit{font-size:17px;font-weight:600;margin-bottom:1rem;color:var(--txt);display:flex;justify-content:space-between;align-items:center}
+.sclose{background:none;border:none;cursor:pointer;color:var(--txt2);font-size:22px;padding:4px}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:.5px solid var(--brd);font-size:14px}
+.drow:last-child{border-bottom:none}
+.drow .dl{color:var(--txt2);display:flex;align-items:center;gap:7px}
+.drow .dv{font-weight:600;color:var(--txt)}
+.sacts{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.bsh{padding:10px 4px;border:.5px solid var(--brd2);border-radius:var(--rm);background:transparent;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;color:var(--txt);flex-direction:column}
+.bsh i{font-size:18px}
+.bsh:active{opacity:.7}
+.bsh.g{border-color:var(--green);color:var(--gtxt)}
+.bsh.b{border-color:#185FA5;color:var(--btxt)}
+.bsh.r{border-color:rgba(210,65,65,.4);color:var(--rtxt)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1c1c1a;color:#fff;padding:11px 18px;border-radius:var(--rl);font-size:14px;font-weight:500;transition:transform .3s;z-index:200;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--green)}.toast.err{background:#993C1D}
+@media(max-width:420px){.fgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spin"></div><p style="color:var(--txt2);font-size:14px">Chargement…</p></div>
+<div class="wrap" id="app" style="display:none">
+  <div class="hdr"><div class="logo"><i class="ti ti-trees"></i></div><div><h1>Camping Municipal</h1><p id="todaylbl"></p></div></div>
+  <div class="sbar">
+    <div style="display:flex;align-items:center;gap:6px"><div class="sdot" id="sdot"></div><span id="stxt">Chargement…</span></div>
+    <button onclick="syncNow()"><i class="ti ti-refresh" style="font-size:15px"></i> Actualiser</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="snum g" id="s0">0</div><div class="slbl">Personnes présentes aujourd'hui</div></div>
+    <div class="stat"><div class="snum" id="s1">0<span style="font-size:12px;font-weight:400;color:var(--txt2)">/51</span></div><div class="slbl">Emplacements occupés</div></div>
+    <div class="stat"><div class="snum a" id="s2">0</div><div class="slbl">Réservations impayées</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="go('list')" id="tlist"><i class="ti ti-list"></i> Liste</button>
+    <button class="tab" onclick="go('cal')" id="tcal"><i class="ti ti-calendar"></i> Calendrier</button>
+    <button class="tab" onclick="go('new')" id="tnew"><i class="ti ti-plus"></i> Nouvelle</button>
+  </div>
+  <div id="vlist">
+    <div class="srow"><input id="sinp" type="text" placeholder="Nom, emplacement, téléphone…" oninput="doFilter(this.value)"><button class="fbtn" id="fbu" onclick="toggleF()"><i class="ti ti-coin"></i> Impayés</button></div>
+    <div id="rlist"></div>
+  </div>
+  <div id="vcal" style="display:none">
+    <div class="calcard">
+      <div class="calnav"><button onclick="calNav(-1)"><i class="ti ti-chevron-left"></i></button><span class="caltit" id="calmth"></span><button onclick="calNav(1)"><i class="ti ti-chevron-right"></i></button></div>
+      <div class="cdows" id="cdows"></div><div class="cdays" id="cdays"></div>
+      <div class="calinfo" id="calinfo" style="display:none">
+        <div class="calinfotit"><i class="ti ti-calendar-event" style="font-size:16px;color:var(--green)"></i><span id="calinfotit"></span></div>
+        <div id="calinfolist"></div>
+      </div>
+    </div>
+  </div>
+  <div id="vnew" style="display:none">
+    <div class="fcard">
+      <div class="ftitle"><i id="ficon" class="ti ti-tent"></i><span id="ftit">Nouvelle réservation</span></div>
+      <div class="fgrid">
+        <div class="field ff"><label>Nom complet</label><input id="fn" type="text" placeholder="ex. Dupont Marie" autocomplete="off"></div>
+        <div class="field"><label>Téléphone</label><input id="fp" type="tel" placeholder="06 12 34 56 78"></div>
+        <div class="field"><label>Emplacement</label><input id="fe" type="text" placeholder="ex. A3, C12…" autocomplete="off"></div>
+        <div class="field"><label>Date d'arrivée</label><input id="fa" type="date"></div>
+        <div class="field"><label>Date de départ</label><input id="fd" type="date"></div>
+        <div class="field"><label>Nb personnes</label><input id="fq" type="number" min="1" placeholder="2"></div>
+        <div class="field ff"><label>Paiement</label><div class="ptog" onclick="togPay()"><div class="psw" id="psw"></div><span class="plbl" id="plbl">Non payé</span></div></div>
+      </div>
+      <button class="btnp" onclick="saveR()"><i class="ti ti-device-floppy"></i><span id="fbtntxt">Enregistrer</span></button>
+      <button class="btns" id="fcancelbtn" onclick="cancelEdit()" style="display:none"><i class="ti ti-x"></i> Annuler</button>
+    </div>
+  </div>
+</div>
+<div class="ov" id="ov" onclick="ovClose(event)">
+  <div class="sheet">
+    <div class="shandle"></div>
+    <div class="stit"><span id="dname"></span><button class="sclose" onclick="closeD()"><i class="ti ti-x"></i></button></div>
+    <div id="drows"></div>
+    <div class="sacts">
+      <button class="bsh g" onclick="togPaidD()"><i class="ti ti-coin"></i><span id="dpaylbl">Marquer payé</span></button>
+      <button class="bsh b" onclick="editD()"><i class="ti ti-edit"></i>Modifier</button>
+      <button class="bsh r" onclick="delD()"><i class="ti ti-trash"></i>Supprimer</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"><i class="ti ti-check" id="ticon"></i><span id="tmsg"></span></div>
+<script>
+const API="https://script.google.com/macros/s/AKfycby52SdmeS7yUZjz3hYy4__bCT26Z8fOg9z0zH_Sd_elr499qKn_AUaSc0kPyCOduV_NXw/exec";
+const BK="camping_v5";
+let R=[],paid=false,fUnpaid=false,fStr='',did=null,eid=null,calY,calM2,calSel=null,saveT=null;
+const today=(()=>{const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());})();
+function p2(n){return String(n).padStart(2,'0');}
+function fmt(d){if(!d)return'—';const[y,m,dd]=d.split('-');return dd+'/'+m+'/'+y;}
+function fmtL(ds){if(!ds)return'—';const[y,m,d]=ds.split('-').map(Number);const mo=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];const dw=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];return dw[new Date(y,m-1,d).getDay()]+' '+d+' '+mo[m-1]+' '+y;}
+function active(r,ds){return r.from&&r.to&&ds>=r.from&&ds<r.to;}
+function hhmm(){return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function dot(s,t){document.getElementById('sdot').className='sdot '+s;document.getElementById('stxt').textContent=t;}
+
+async function load(){
+  dot('go','Chargement…');
+  try{
+    const r=await fetch(API+'?t='+Date.now());
+    const j=await r.json();
+    if(j.ok){R=j.data||[];localStorage.setItem(BK,JSON.stringify(R));dot('ok','Synchronisé · '+hhmm());}
+    else throw new Error(j.error);
+  }catch(e){
+    dot('err','Hors ligne');
+    try{R=JSON.parse(localStorage.getItem(BK)||'[]');}catch(e2){}
+  }
+}
+
+async function push(){
+  dot('go','Sauvegarde…');
+  localStorage.setItem(BK,JSON.stringify(R));
+  try{
+    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(R)});
+    setTimeout(async()=>{await load();renderList();},2000);
+  }catch(e){dot('err','Non synchronisé (local OK)');}
+}
+
+function sched(){clearTimeout(saveT);saveT=setTimeout(push,500);}
+async function syncNow(){await load();renderList();renderCal();}
+
+async function init(){
+  const td=new Date();const dw=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];const mo=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  document.getElementById('todaylbl').textContent=dw[td.getDay()]+' '+td.getDate()+' '+mo[td.getMonth()]+' '+td.getFullYear();
+  try{R=JSON.parse(localStorage.getItem(BK)||'[]');}catch(e){}
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').style.display='block';
+  renderList();calcStats();
+  await load();renderList();renderCal();
+}
+
+function calcStats(){const pr=R.filter(r=>active(r,today));document.getElementById('s0').innerHTML=pr.reduce((a,r)=>a+(parseInt(r.persons)||0),0);document.getElementById('s1').innerHTML=new Set(pr.map(r=>r.spot)).size+'<span style="font-size:12px;font-weight:400;color:var(--txt2)">/51</span>';document.getElementById('s2').textContent=R.filter(r=>!r.paid).length;}
+function renderList(){let d=R.slice().sort((a,b)=>a.from<b.from?-1:1);if(fStr){const t=fStr.toLowerCase();d=d.filter(r=>r.name.toLowerCase().includes(t)||r.spot.toLowerCase().includes(t)||(r.phone&&r.phone.includes(t)));}if(fUnpaid)d=d.filter(r=>!r.paid);const el=document.getElementById('rlist');if(!d.length){el.innerHTML='<div class="empty"><i class="ti ti-tent-off"></i>Aucune réservation trouvée</div>';calcStats();return;}el.innerHTML=d.map(r=>`<div class="card" onclick="openD('${r.id}')"><div class="ctop"><div><div class="cname">${r.name}</div><div class="cspot"><i class="ti ti-map-pin" style="font-size:11px;vertical-align:-2px"></i> ${r.spot}</div></div><span class="badge ${r.paid?'bp':'bu'}">${r.paid?'✓ Payé':'En attente'}</span></div><div class="meta"><span><i class="ti ti-calendar"></i>${fmt(r.from)} → ${fmt(r.to)}</span><span><i class="ti ti-users"></i>${r.persons} pers.</span><span><i class="ti ti-phone"></i>${r.phone||'—'}</span></div></div>`).join('');calcStats();}
+function doFilter(v){fStr=v;renderList();}
+function toggleF(){fUnpaid=!fUnpaid;document.getElementById('fbu').className='fbtn'+(fUnpaid?' on':'');renderList();}
+function openD(id){did=id;const r=R.find(x=>x.id===id);if(!r)return;document.getElementById('dname').textContent=r.name;document.getElementById('dpaylbl').textContent=r.paid?'Impayé':'Payé';document.getElementById('drows').innerHTML=`<div class="drow"><span class="dl"><i class="ti ti-map-pin"></i>Emplacement</span><span class="dv">${r.spot}</span></div><div class="drow"><span class="dl"><i class="ti ti-phone"></i>Téléphone</span><span class="dv">${r.phone||'—'}</span></div><div class="drow"><span class="dl"><i class="ti ti-calendar"></i>Arrivée</span><span class="dv">${fmt(r.from)}</span></div><div class="drow"><span class="dl"><i class="ti ti-calendar-off"></i>Départ</span><span class="dv">${fmt(r.to)}</span></div><div class="drow"><span class="dl"><i class="ti ti-users"></i>Personnes</span><span class="dv">${r.persons}</span></div><div class="drow"><span class="dl"><i class="ti ti-coin"></i>Paiement</span><span class="dv"><span class="badge ${r.paid?'bp':'bu'}">${r.paid?'✓ Payé':'En attente'}</span></span></div>`;document.getElementById('ov').classList.add('open');}
+function closeD(){document.getElementById('ov').classList.remove('open');}
+function ovClose(e){if(e.target===document.getElementById('ov'))closeD();}
+function togPaidD(){const r=R.find(x=>x.id===did);if(!r)return;r.paid=!r.paid;sched();renderList();renderCal();openD(did);toast(r.paid?'Marqué comme payé':'Marqué comme impayé','ok');}
+function editD(){const r=R.find(x=>x.id===did);if(!r)return;closeD();eid=r.id;document.getElementById('fn').value=r.name;document.getElementById('fp').value=r.phone||'';document.getElementById('fe').value=r.spot;document.getElementById('fa').value=r.from||'';document.getElementById('fd').value=r.to||'';document.getElementById('fq').value=r.persons||'';paid=!!r.paid;document.getElementById('psw').className='psw'+(paid?' on':'');document.getElementById('plbl').textContent=paid?'Payé':'Non payé';document.getElementById('ftit').textContent='Modifier la réservation';document.getElementById('ficon').className='ti ti-edit';document.getElementById('fbtntxt').textContent='Enregistrer les modifications';document.getElementById('fcancelbtn').style.display='flex';go('new');}
+function delD(){if(!confirm('Supprimer ?'))return;R=R.filter(x=>x.id!==did);sched();renderList();renderCal();closeD();if(calSel)calDayInfo(calSel);toast('Supprimé','ok');}
+function cancelEdit(){eid=null;resetF();go('list');}
+function resetF(){['fn','fp','fe','fa','fd','fq'].forEach(id=>document.getElementById(id).value='');paid=false;document.getElementById('psw').className='psw';document.getElementById('plbl').textContent='Non payé';document.getElementById('ftit').textContent='Nouvelle réservation';document.getElementById('ficon').className='ti ti-tent';document.getElementById('fbtntxt').textContent='Enregistrer';document.getElementById('fcancelbtn').style.display='none';}
+function togPay(){paid=!paid;document.getElementById('psw').className='psw'+(paid?' on':'');document.getElementById('plbl').textContent=paid?'Payé':'Non payé';}
+function saveR(){const name=document.getElementById('fn').value.trim();const phone=document.getElementById('fp').value.trim();const spot=document.getElementById('fe').value.trim();const from=document.getElementById('fa').value;const to=document.getElementById('fd').value;const persons=document.getElementById('fq').value;if(!name||!spot||!from){toast('Remplissez le nom, l\'emplacement et la date','err');return;}if(eid){const i=R.findIndex(x=>x.id===eid);if(i>=0)R[i]={...R[i],name,phone,spot,from,to,persons:persons||'?',paid};eid=null;toast('Modifié !','ok');}else{R.push({id:Date.now().toString(),name,phone,spot,from,to,persons:persons||'?',paid});toast('Enregistré !','ok');}sched();resetF();go('list');}
+function go(t){['list','cal','new'].forEach(v=>{document.getElementById('v'+v).style.display=v===t?'block':'none';document.getElementById('t'+v).className='tab'+(v===t?' on':'');});if(t==='list')renderList();if(t==='cal')renderCal();if(t==='new'&&!eid)resetF();}
+function renderCal(){const now=new Date();if(calY===undefined){calY=now.getFullYear();calM2=now.getMonth();}const mo=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];document.getElementById('calmth').textContent=mo[calM2]+' '+calY;document.getElementById('cdows').innerHTML=['Lu','Ma','Me','Je','Ve','Sa','Di'].map(d=>`<div class="cdow">${d}</div>`).join('');const first=new Date(calY,calM2,1);let sd=(first.getDay()+6)%7;const dim=new Date(calY,calM2+1,0).getDate();const pd=new Date(calY,calM2,0).getDate();let h='';for(let i=0;i<sd;i++)h+=`<div class="cday om"><div class="dn">${pd-sd+1+i}</div></div>`;for(let d=1;d<=dim;d++){const ds=calY+'-'+p2(calM2+1)+'-'+p2(d);const rs=R.filter(r=>active(r,ds));let cls='cday'+(ds===today?' tod':'')+(ds===calSel?' sel':'');let dot='';if(rs.length){const hu=rs.some(r=>!r.paid);dot=`<div class="cdot${hu?' u':''}"></div>`;if(rs.length>1)dot+=`<div style="font-size:10px;color:${hu?'var(--rtxt)':'var(--gtxt)'};line-height:1">${rs.length}</div>`;}h+=`<div class="${cls}" onclick="calDay('${ds}')"><div class="dn">${d}</div>${dot}</div>`;}const rem=(7-(sd+dim)%7)%7;for(let i=1;i<=rem;i++)h+=`<div class="cday om"><div class="dn">${i}</div></div>`;document.getElementById('cdays').innerHTML=h;if(calSel)calDayInfo(calSel);}
+function calDay(ds){calSel=ds;renderCal();}
+function calNav(n){calM2+=n;if(calM2<0){calM2=11;calY--;}if(calM2>11){calM2=0;calY++;}renderCal();}
+function calDayInfo(ds){const el=document.getElementById('calinfo');const rs=R.filter(r=>active(r,ds));const persons=rs.reduce((a,r)=>a+(parseInt(r.persons)||0),0);el.style.display='block';document.getElementById('calinfotit').textContent=fmtL(ds)+(rs.length?' · '+rs.length+' séjour'+(rs.length>1?'s':'')+' · '+persons+' pers.':' — aucune réservation');document.getElementById('calinfolist').innerHTML=rs.length?rs.map(r=>`<div class="mcard" onclick="openD('${r.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600;color:var(--txt)">${r.name}</span><span class="badge ${r.paid?'bp':'bu'}" style="font-size:11px">${r.paid?'✓ Payé':'Impayé'}</span></div><div class="meta" style="margin-top:4px"><span><i class="ti ti-map-pin" style="font-size:13px"></i>${r.spot}</span><span><i class="ti ti-users" style="font-size:13px"></i>${r.persons} pers.</span><span>${fmt(r.from)} → ${fmt(r.to)}</span></div></div>`).join(''):'<div style="font-size:13px;color:var(--txt2);padding:8px 0">Aucun séjour actif ce jour.</div>';}
+let tt;function toast(msg,type){clearTimeout(tt);document.getElementById('tmsg').textContent=msg;document.getElementById('ticon').className=type==='err'?'ti ti-alert-circle':'ti ti-check';const el=document.getElementById('toast');el.className='toast show '+(type||'ok');tt=setTimeout(()=>el.className='toast',2500);}
+init();
+</script>
+</body>
+</html>
